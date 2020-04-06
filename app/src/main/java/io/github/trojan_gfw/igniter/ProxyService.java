@@ -267,7 +267,7 @@ public class ProxyService extends VpnService implements TestConnection.OnResultL
             }
         }
         enable_clash = intent.getBooleanExtra(CLASH_EXTRA_NAME, true);
-        boolean enable_ipv6 = false;
+        boolean enable_ipv6 = true;
 
         File file = new File(getFilesDir(), "config.json");
         if (file.exists()) {
@@ -276,7 +276,7 @@ public class ProxyService extends VpnService implements TestConnection.OnResultL
                     byte[] content = new byte[(int) file.length()];
                     fis.read(content);
                     JSONObject json = new JSONObject(new String(content));
-                    enable_ipv6 = json.getBoolean("enable_ipv6");
+                    //enable_ipv6 = json.getBoolean("enable_ipv6");
                 }
             } catch (Exception e) {
                 e.printStackTrace();

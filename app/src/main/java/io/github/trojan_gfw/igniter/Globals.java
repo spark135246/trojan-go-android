@@ -36,6 +36,14 @@ public class Globals {
         return PathHelper.combine(filesDir, "config_list.json");
     }
 
+    public static String getGeoIPPath() {
+        return PathHelper.combine(filesDir, "geoip.dat");
+    }
+
+    public static String getGeoSitePath() {
+        return PathHelper.combine(filesDir, "geosite.dat");
+    }
+
     public static void setTrojanConfigInstance(TrojanConfig config) {
         trojanConfigInstance = config;
     }

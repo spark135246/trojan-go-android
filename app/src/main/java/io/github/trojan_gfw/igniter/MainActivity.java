@@ -49,7 +49,9 @@ public class MainActivity extends AppCompatActivity implements TrojanConnection.
     private EditText remoteAddrText;
     private EditText remotePortText;
     private EditText passwordText;
-    private Switch ipv6Switch;
+    private EditText sniText;
+    private Switch muxSwitch;
+    private Switch bypassChinaSwitch;
     private Switch verifySwitch;
     private Switch clashSwitch;
     private TextView clashLink;
@@ -104,6 +106,19 @@ public class MainActivity extends AppCompatActivity implements TrojanConnection.
         }
     };
 
+    private TextViewListener sniTextListener = new TextViewListener() {
+        @Override
+        protected void onTextChanged(String before, String old, String aNew, String after) {
+            // update TextView
+            startUpdates(); // to prevent infinite loop.
+            if (sniText.hasFocus()) {
+                TrojanConfig ins = Globals.getTrojanConfigInstance();
+                ins.setSni(sniText.getText().toString());
+            }
+            endUpdates();
+        }
+    };
+
     private void copyRawResourceToDir(int resId, String destPathName, boolean override) {
         File file = new File(destPathName);
         if (override || !file.exists()) {
@@ -153,12 +168,15 @@ public class MainActivity extends AppCompatActivity implements TrojanConnection.
         }
         remoteAddrText.setEnabled(inputEnabled);
         remotePortText.setEnabled(inputEnabled);
-        ipv6Switch.setEnabled(inputEnabled);
         passwordText.setEnabled(inputEnabled);
         trojanURLText.setEnabled(inputEnabled);
         verifySwitch.setEnabled(inputEnabled);
         clashSwitch.setEnabled(inputEnabled);
         clashLink.setEnabled(inputEnabled);
+
+        sniText.setEnabled(inputEnabled);
+        muxSwitch.setEnabled(inputEnabled);
+        bypassChinaSwitch.setEnabled(inputEnabled);
     }
 
     @Override
@@ -171,20 +189,25 @@ public class MainActivity extends AppCompatActivity implements TrojanConnection.
         remotePortText = findViewById(R.id.remotePortText);
         passwordText = findViewById(R.id.passwordText);
         trojanURLText = findViewById(R.id.trojanURLText);
-        ipv6Switch = findViewById(R.id.ipv6Switch);
         verifySwitch = findViewById(R.id.verifySwitch);
         clashSwitch = findViewById(R.id.clashSwitch);
         clashLink = findViewById(R.id.clashLink);
         clashLink.setMovementMethod(LinkMovementMethod.getInstance());
         startStopButton = findViewById(R.id.startStopButton);
+        sniText = findViewById(R.id.sniText);
+        muxSwitch = findViewById(R.id.muxSwitch);
+        bypassChinaSwitch = findViewById(R.id.bypassChinaSwitch);
 
         copyRawResourceToDir(R.raw.cacert, Globals.getCaCertPath(), true);
         copyRawResourceToDir(R.raw.country, Globals.getCountryMmdbPath(), true);
         copyRawResourceToDir(R.raw.clash_config, Globals.getClashConfigPath(), false);
-
+        copyRawResourceToDir(R.raw.geoip, Globals.getGeoIPPath(), true);
+        copyRawResourceToDir(R.raw.geosite, Globals.getGeoSitePath(), true);
         remoteAddrText.addTextChangedListener(remoteAddrTextListener);
 
         remotePortText.addTextChangedListener(remotePortTextListener);
+
+        sniText.addTextChangedListener(sniTextListener);
 
         passwordText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -209,19 +232,28 @@ public class MainActivity extends AppCompatActivity implements TrojanConnection.
 
         passwordText.addTextChangedListener(passwordTextListener);
 
-        ipv6Switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                TrojanConfig ins = Globals.getTrojanConfigInstance();
-                ins.setEnableIpv6(isChecked);
-            }
-        });
 
         verifySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 TrojanConfig ins = Globals.getTrojanConfigInstance();
                 ins.setVerifyCert(isChecked);
+            }
+        });
+
+        muxSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                TrojanConfig ins = Globals.getTrojanConfigInstance();
+                ins.setMux(isChecked);
+            }
+        });
+
+        bypassChinaSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                TrojanConfig ins = Globals.getTrojanConfigInstance();
+                ins.setBypassChina(isChecked);
             }
         });
 
@@ -442,11 +474,13 @@ public class MainActivity extends AppCompatActivity implements TrojanConnection.
                         remoteAddrText.setText(config.getRemoteAddr());
                         remotePortText.setText(String.valueOf(config.getRemotePort()));
                         passwordText.setText(config.getPassword());
+                        sniText.setText(config.getSni());
                     }
                 });
                 trojanURLText.setText(TrojanURLHelper.GenerateTrojanURL(config));
-                ipv6Switch.setChecked(config.getEnableIpv6());
                 verifySwitch.setChecked(config.getVerifyCert());
+                muxSwitch.setChecked(config.getMux());
+                bypassChinaSwitch.setChecked(config.getBypassChina());
             }
         } else if (EXEMPT_APP_CONFIGURE_REQUEST_CODE == requestCode && Activity.RESULT_OK == resultCode) {
             if (ProxyService.STARTED == proxyState) {
@@ -502,8 +536,10 @@ public class MainActivity extends AppCompatActivity implements TrojanConnection.
                     remoteAddrText.setText(ins.getRemoteAddr());
                     remotePortText.setText(String.valueOf(ins.getRemotePort()));
                     passwordText.setText(ins.getPassword());
-                    ipv6Switch.setChecked(ins.getEnableIpv6());
+                    sniText.setText(ins.getSni());
                     verifySwitch.setChecked(ins.getVerifyCert());
+                    muxSwitch.setChecked(ins.getMux());
+                    bypassChinaSwitch.setChecked(ins.getBypassChina());
                 }
             } catch (Exception e) {
                 e.printStackTrace();

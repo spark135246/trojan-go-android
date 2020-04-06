@@ -61,4 +61,7 @@
     <string name="exempt_app_exit_confirm">Are you sure to exit without save?</string>
     <string name="exempt_app_loading_tip">Loading…</string>
     <string name="exempt_app_exit_without_saving_confirm">Exit without saving exempt app list?</string>
+    <string name="bypass_china">Bypass China with GeoIP/GeoSite</string>
+    <string name="multiplexing">Mutiplexing</string>
+    <string name="domain_name">Domain Name (Optional)</string>
 </resources>

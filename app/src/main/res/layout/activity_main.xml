@@ -83,6 +83,22 @@
             app:layout_constraintTop_toBottomOf="@+id/remotePortText" />
 
         <EditText
+            android:id="@+id/sniText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="12dp"
+            android:ems="10"
+            android:hint="@string/domain_name"
+            android:inputType="textUri"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/passwordText" />
+
+        <EditText
             android:id="@+id/trojanURLText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -96,21 +112,7 @@
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/passwordText" />
-
-        <Switch
-            android:id="@+id/ipv6Switch"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="16dp"
-            android:text="@string/enable_ipv6"
-            android:textSize="@dimen/text_size"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/trojanURLText" />
+            app:layout_constraintTop_toBottomOf="@+id/sniText" />
 
         <Switch
             android:id="@+id/verifySwitch"
@@ -125,7 +127,37 @@
             android:textSize="@dimen/text_size"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ipv6Switch" />
+            app:layout_constraintTop_toBottomOf="@+id/trojanURLText" />
+
+        <Switch
+            android:id="@+id/bypassChinaSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="16dp"
+            android:checked="true"
+            android:text="@string/bypass_china"
+            android:textSize="@dimen/text_size"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/muxSwitch" />
+
+        <Switch
+            android:id="@+id/muxSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="16dp"
+            android:checked="true"
+            android:text="@string/multiplexing"
+            android:textSize="@dimen/text_size"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/verifySwitch" />
 
         <LinearLayout
             android:id="@+id/columnContainer"
@@ -138,7 +170,7 @@
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/verifySwitch">
+            app:layout_constraintTop_toBottomOf="@+id/bypassChinaSwitch">
 
             <TextView
                 android:id="@+id/clashLink"

@@ -1,11 +1,14 @@
 package io.github.trojan_gfw.igniter;
 
+import trojan.Trojan;
+
 public class JNIHelper {
-    static {
-        System.loadLibrary("jni-helper");
+    //HACK
+    public static  void trojan(String config) {
+        Trojan.runClient(config);
     }
 
-    public static native void trojan(String config);
-
-    public static native void stop();
+    public static  void stop() {
+        Trojan.stopClient();
+    }
 }
